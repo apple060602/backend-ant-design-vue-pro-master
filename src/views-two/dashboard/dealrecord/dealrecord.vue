@@ -43,7 +43,7 @@ const columns = [
 const data = [
   {
     key: 1,
-    currency: 'HALO',
+    currency: 'halo',
     updom: '转出',
     nummoney:'10000',
     transfertype: '内转',
