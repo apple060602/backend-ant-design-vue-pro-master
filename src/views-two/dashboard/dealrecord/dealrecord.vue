@@ -1,77 +1,60 @@
 <template>
-  <a-table
-    :columns="columns"
-    :data-source="data"
-    :row-selection="rowSelection"
-    :expanded-row-keys.sync="expandedRowKeys"
-  />
+    <table class="table table-hover">
+      <tr>
+        <th>币种</th>
+        <th>类别</th>
+        <th>数量</th>
+        <th>转账类型</th>
+        <th>UID</th>
+      </tr>
+      <tr v-for="li in list" :key="li">
+        <td v-text="li.currency"></td>
+        <td v-text="li.updom"></td>
+        <td v-text="li.amount"></td>
+        <td v-text="li.transfertype"></td>
+        <td v-text="li.uid"></td>
+      </tr>
+    </table>
 </template>
+
 <script>
-const columns = [
-  {
-    title: '币种',
-    dataIndex: 'currency',
-    key: 'currency',
-    width: '20%',
-  },
-  {
-    title: '类别',
-    dataIndex: 'updom',
-    key: 'name',
-    width: '20%',
-  },
-  {
-    title: '数量',
-    dataIndex: 'nummoney',
-    width: '20%',
-    key: 'nummoney',
-  },
-  {
-    title: '转账类型',
-    dataIndex: 'transfertype',
-    width: '20%',
-    key: 'transfertype',
-  },
-  {
-    title: '使用者UID',
-    dataIndex: 'uid',
-    width: '20%',
-    key: 'uid',
-  },
-];
-
-const data = [
-  {
-    key: 1,
-    currency: 'halo',
-    updom: '转出',
-    nummoney:'10000',
-    transfertype: '内转',
-    uid: '000001',
-  },
-
-];
-
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  },
-  onSelect: (record, selected, selectedRows) => {
-    console.log(record, selected, selectedRows);
-  },
-  onSelectAll: (selected, selectedRows, changeRows) => {
-    console.log(selected, selectedRows, changeRows);
-  },
-};
-
-export default {
-  data() {
-    return {
-      data,
-      columns,
-      rowSelection,
-      expandedRowKeys: [],
-    };
-  },
-};
+import axios from 'axios';
+  export default {
+    data () {
+      return {
+          list: [],
+      }
+    },
+    mounted() {
+      axios.get("https://api.105paolian.com/wallet/history/RyAc7Si4rWWuV3TxXu2mqa9jqg1RSbhnRjKWzJ4PiXf6nqSNK")
+        .then(response => {
+            console.log(response.data);
+           
+          response.data.forEach(obj => {
+            obj.currency = 'halo';
+            obj.updom = '转出';
+            obj.transfertype = '外转';
+            obj.uid = '0001';
+        });
+         this.list = response.data;
+      })
+  }
+}
 </script>
+<style lang="css">
+  .table{
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+  }
+  .table th{
+    font-size: 18px;
+  }
+  .table tr{
+    border: 1px solid #000;
+  }
+  .table td{
+    font-size: 16px;
+    width: 1000px;
+  }
+</style>
