@@ -16,7 +16,7 @@
            </a-select>
         </td>
         <td>
-          <a-input-number id="inputNumber" v-model="value" :min="0" :max="500000" @change="onChange" />
+          <a-input-number id="inputNumber" v-model="amount" :min="0" :max="500000" @change="onChange" />
         </td>
         <td>
           <a-select default-value="0001" style="width: 120px" @change="handleChange">
@@ -26,8 +26,18 @@
           </a-select>
         </td>
         <td>
-          <a-button type="primary">
-            发送
+          <a-button type="primary" @click="submit">
+            发送钱
+          </a-button>
+        </td>
+        <td>
+          <a-button type="primary" @click="submit2">
+            取得钱
+          </a-button>
+        </td>
+        <td>
+          <a-button type="primary" @click="submit3">
+            取得历史资料
           </a-button>
         </td>
       </tr>
@@ -35,18 +45,44 @@
   </div>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      value: 0,
+      amount: 0,
     };
   },
   methods: {
+    // 取得历史纪录
+    submit3() {
+      let history = axios.get('https://api.105paolian.com/wallet/history/RyAc7Si4rWWuV3TxXu2mqa9jqg1RSbhnRjKWzJ4PiXf6nqSNK');
+      console.log(history);
+    },
+    // 取得钱
+    submit2() {
+      let accounts = axios.get('https://api.105paolian.com/toychain/accounts/RyAc7Si4rWWuV3TxXu2mqa9jqg1RSbhnRjKWzJ4PiXf6nqSNK');
+      console.log(accounts);
+    },
+    // 发送钱
+    submit() {
+      const jsonData = JSON.stringify({
+        user_id: "0001",
+        amount: this.amount
+    })
+      let res = axios.post('https://api.105paolian.com/wallet/transfers', jsonData);
+      let data = this.amount;
+      console.log(data);
+      console.log(res);
+    },
+      
+
     handleChange(value) {
       console.log(`selected ${value}`);
     },
     onChange(value) {
-      console.log('changed', value);
+      // console.log('changed', value);
+      this.money = value;
     },
   },
 };
